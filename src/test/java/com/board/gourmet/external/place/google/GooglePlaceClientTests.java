@@ -28,15 +28,12 @@ class GooglePlaceClientTests {
 
     @Autowired private GoogleApiPropertyResolver googleApiPropertyResolver;
 
-    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-    private static final String TYPE_PLACEFROMTEXT = "/findplacefromtext";
-    private static final String OUT_JSON = "/json";
-
     @Test
     void findPlaceFromTextResponse() {
         String apiKey = googleApiPropertyResolver.getApiKey();
-        String resourceUrl = PLACES_API_BASE + TYPE_PLACEFROMTEXT + OUT_JSON;
-        RestTemplate restTemplate = new RestTemplate();
+        String resourceUrl = googleApiPropertyResolver.getPlacesApiBase()
+                + googleApiPropertyResolver.getTypePlaceFromText()
+                + googleApiPropertyResolver.getOutJson();
 
         String fields = "formatted_address,name,rating,place_id,opening_hours,photo,price_level,reference,geometry";
 
@@ -49,13 +46,14 @@ class GooglePlaceClientTests {
                         .queryParam("key", apiKey)
                         .build();
 
+        RestTemplate restTemplate = new RestTemplate();
         final ResponseEntity<PlacesFindPlaceFromTextResponse> response =
                 restTemplate
                         .getForEntity(uri.toUri(), PlacesFindPlaceFromTextResponse.class);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(Objects.requireNonNull(response.getBody()).getStatus(), equalTo(PlacesSearchStatus.OK));
-        
+
     }
 
 }
