@@ -24,7 +24,7 @@ public class Place implements Serializable {
     private String name;
     @JsonProperty("permanently_closed")
     private String permanentlyClosed;
-    private String photos;
+    private List<PlacePhoto> photos;
     @JsonProperty("place_id")
     private String placeId;
     @JsonProperty("price_level")
